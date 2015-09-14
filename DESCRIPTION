@@ -1,9 +1,10 @@
-Package: nlnc
+Package: nlnet3
 Type: Package
-Title: What the package does (short line)
+Title: find the non-linear association between genes
 Version: 1.0
-Date: 2015-08-26
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Date: 2015-08-28
+Author: Haodong Liu, Tianwei Yu, Kai Wang
+Maintainer: Haodong Liu <liute62@sina.cn>
+Description: It includes three choices: K-means method, non-linear network reconstruction and non-linear hierarchical clustering.
+License: GPL (>= 2)
+Imports:TSP, fdrtool, igraph, coin
