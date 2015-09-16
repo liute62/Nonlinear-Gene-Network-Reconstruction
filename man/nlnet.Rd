@@ -7,7 +7,7 @@
   Non-Linear Network reconstruction method
 }
 \usage{
-nlnet(input, gene.fdr.cutoff=0.05, gene.fdr.plot=FALSE, module.min.size=40, gene.community.method="multilevel", use.normal.approx=FALSE, normalization="standardize", plot.method="communitygraph")
+nlnet(input, gene.fdr.cutoff=0.05, gene.fdr.plot=FALSE, min.module.size=0, gene.community.method="multilevel", use.normal.approx=FALSE, normalization="standardize", plot.method="communitygraph")
 }
 \arguments{
   \item{input}{the data matrix with no missing values.
@@ -18,7 +18,7 @@ nlnet(input, gene.fdr.cutoff=0.05, gene.fdr.plot=FALSE, module.min.size=40, gene
  \item{gene.fdr.plot}{
   whether plot a figure with estimated densities, distribution functions, and (local) false discovery rates.
 }
-  \item{module.min.size}{
+  \item{min.module.size}{
   the min number of genes together as a module.
 }
   \item{gene.community.method}{the method for community detection.
@@ -80,7 +80,7 @@ plot.method: It provides three kinds of ploting method:
  nlnet(input,gene.community.method="label.propagation")
  
  ## change the localfdr cutoff or adjust the modularity size
- nlnet(input,gene.fdr.cutoff=0.10,module.min.size=10)
+ nlnet(input,gene.fdr.cutoff=0.10,min.module.size=10)
  
  ## get the result and see it values
  comm<-nlnet(input)

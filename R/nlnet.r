@@ -2,7 +2,7 @@
 # input: the data matrix with no missing values
 # gene.fdr.cutoff: the local false discovery cutoff in establishing links between genes
 # gene.fdr.plot: whether plot a figure with estimated densities, distribution functions, and (local) false discovery rates
-# module.min.size: the min number of genes together as a module.
+# min.module.size: the min number of genes together as a module.
 # gene.community.method: it provides three kinds of community detection method:
 # "mutilevel", "label.propagation" and "leading.eigenvector".
 # use.normal.approx: whether to use the normal approximation to for the null hypothesis. If TRUE, normal approximation is used for every feature, AND all covariances are assumed to be zero. If FALSE, generates permutation based null distribution - mean vector and a variance-covariance matrix.
@@ -13,7 +13,7 @@
 # return the community and its membership
 ################################################################################
 
-nlnet<-function(input, gene.fdr.cutoff=0.05,gene.fdr.plot=FALSE,module.min.size=40,gene.community.method="multilevel",use.normal.approx=FALSE,normalization="standardize",plot.method="communitygraph")
+nlnet<-function(input, gene.fdr.cutoff=0.05,gene.fdr.plot=FALSE,min.module.size=0,gene.community.method="multilevel",use.normal.approx=FALSE,normalization="standardize",plot.method="communitygraph")
 {
     
     normrow<-function(array)
@@ -155,7 +155,36 @@ nlnet<-function(input, gene.fdr.cutoff=0.05,gene.fdr.plot=FALSE,module.min.size=
       print("can not find the method, use multilevel as the default one")
       commu<-multilevel.community(gene.graph, weights=NA)
     }
+    
     mem<-commu$membership
+    ta<-table(mem)
+    for(i in 1 : length(ta)){
+      if(ta[i] < min.module.size){
+        ##now replace the value in the mem that equals i to zero
+        for(j in 1 : length(mem)){
+          if(mem[j] == i){
+            mem[j]<-0  
+          }
+        }
+      }
+    }
+    ## then we adjust the index of community after we have set some value into zero
+    ta.new<-table(mem)
+    data.frame<-as.data.frame(ta.new)$mem
+    if(data.frame[1] == 0){
+      for(i in 1 : length(ta.new)){
+        if(i > 1){
+          index.origin <- data.frame[i]
+          index.new <- i-1
+          for(j in 1 : length(mem)){
+            if(mem[j] == index.origin){
+              mem[j]<-index.new
+            }
+          }
+        }
+      }
+    }
+    
     if(plot.method=="none"){
         
     }else if(plot.method=="communitygraph"){
@@ -165,6 +194,8 @@ nlnet<-function(input, gene.fdr.cutoff=0.05,gene.fdr.plot=FALSE,module.min.size=
     }else if(plot.method=="membership"){ 
         plot(mem)
     }
+    
+    commu$membership<-mem
     return (commu)
 }
 
