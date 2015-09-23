@@ -1,6 +1,8 @@
 # source this code to conduct the non-linear relations network reconstruction.
 # input: the data matrix with no missing values
-# gene.fdr.cutoff: the local false discovery cutoff in establishing links between genes
+# min.fdr.cutoff: the minimun value of the local false discovery cutoff in establishing links between genes
+# max.fdr.cutoff: the maximun value of the local false discovery cutoff in establishing links between genes
+# fdr.quantile: determine how much connections between genes.
 # gene.fdr.plot: whether plot a figure with estimated densities, distribution functions, and (local) false discovery rates
 # min.module.size: the min number of genes together as a module.
 # gene.community.method: it provides three kinds of community detection method:
@@ -13,7 +15,7 @@
 # return the community and its membership
 ################################################################################
 
-nlnet<-function(input, gene.fdr.cutoff=0.05,gene.fdr.plot=FALSE,min.module.size=0,gene.community.method="multilevel",use.normal.approx=FALSE,normalization="standardize",plot.method="communitygraph")
+nlnet<-function(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007,gene.fdr.plot=FALSE,min.module.size=0,gene.community.method="multilevel",use.normal.approx=FALSE,normalization="standardize",plot.method="communitygraph")
 {
     
     normrow<-function(array)
@@ -134,23 +136,42 @@ nlnet<-function(input, gene.fdr.cutoff=0.05,gene.fdr.plot=FALSE,min.module.size=
     for(i in 1:nrow(sim.mat)) d.mat[i,]<-gene.specific.q(d.tmp.mat[i,])
     diag(d.mat)<-0
     gene.rel.mat<-matrix(0,nrow=n,ncol=n)#the matrix store the relationship between two genes, 1 means having relationship while 0 means no relationship
+    gene.fdr.mat<-matrix(0,nrow=n,ncol=n)
     for(i in 1:n) {
-        sim.vec<-d.mat[i,]
-        suppressWarnings(t.locfdr<-fdrtool(sim.vec, statistic="normal", plot=gene.fdr.plot,color.figure=TRUE,verbose=FALSE,cutoff.method="pct0",pct0=0.75))
-        t.row.lfdr<-as.vector(t.locfdr$lfdr)
-        for(j in 1:n){
-            if(t.row.lfdr[j] < gene.fdr.cutoff){
-                gene.rel.mat[i,j]<-1
-            }
-        }
+      sim.vec<-d.mat[i,]
+      suppressWarnings(t.locfdr<-fdrtool(sim.vec, statistic="normal", plot=FALSE,color.figure=TRUE,verbose=FALSE,cutoff.method="pct0",pct0=0.75))
+      t.row.lfdr<-as.vector(t.locfdr$lfdr)
+      gene.fdr.mat[i,]<-t.row.lfdr
     }
+    #now dynamic adjust the fdr cutoff
+    last.fdr.cutoff<-quantile(as.vector(gene.fdr.mat),fdr.quantile)
+    cat('------fdr cutoff aimed ',last.fdr.cutoff,'-------\n')
+    if(last.fdr.cutoff > max.fdr.cutoff){
+        gene.fdr.cutoff<- max.fdr.cutoff
+    }else{
+     if(last.fdr.cutoff < min.fdr.cutoff){
+        gene.fdr.cutoff<- min.fdr.cutoff
+      }else{
+        gene.fdr.cutoff<-last.fdr.cutoff
+      }
+    }
+    cat('------fdr cutoff real ',gene.fdr.cutoff,'-------\n')
+    for(i in 1:n){
+      for(j in 1:n){
+        if(gene.fdr.mat[i,j] < gene.fdr.cutoff){
+          gene.rel.mat[i,j]<-1 
+        } 
+      }
+    }
+    gene.rel.mat<-t(gene.rel.mat)+gene.rel.mat ##symmetric
+    
     gene.graph<-graph.adjacency(gene.rel.mat, mode="undirected", weighted=NULL)
     if(gene.community.method=="multilevel"){
         commu<-multilevel.community(gene.graph, weights=NA)
     }else if(gene.community.method=="label.propagation"){
         commu<-label.propagation.community(gene.graph)
     }else if(gene.community.method=="leading.eigenvector"){
-        commu<-leading.eigenvector.community(gene.graph)
+        commu<-leading.eigenvector.community(gene.graph,options=list(n=1000))
     }else{
       print("can not find the method, use multilevel as the default one")
       commu<-multilevel.community(gene.graph, weights=NA)

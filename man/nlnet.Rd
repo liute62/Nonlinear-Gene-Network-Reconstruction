@@ -7,13 +7,17 @@
   Non-Linear Network reconstruction method
 }
 \usage{
-nlnet(input, gene.fdr.cutoff=0.05, gene.fdr.plot=FALSE, min.module.size=0, gene.community.method="multilevel", use.normal.approx=FALSE, normalization="standardize", plot.method="communitygraph")
+nlnet(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007, gene.fdr.plot=FALSE, min.module.size=0, gene.community.method="multilevel", use.normal.approx=FALSE, normalization="standardize", plot.method="communitygraph")
 }
 \arguments{
   \item{input}{the data matrix with no missing values.
 }
-  \item{gene.fdr.cutoff}{
-   the local false discovery cutoff in establishing links between genes.
+  \item{min.fdr.cutoff}{
+  the minimun value of the local false discovery cutoff in establishing links between genes.
+} \item{max.fdr.cutoff}{
+   the maximun value of the local false discovery cutoff in establishing links between genes.
+} \item{fdr.quantile}{
+   determine how much connections between genes.
 }
  \item{gene.fdr.plot}{
   whether plot a figure with estimated densities, distribution functions, and (local) false discovery rates.
@@ -79,8 +83,8 @@ plot.method: It provides three kinds of ploting method:
  ## use different community detection method
  nlnet(input,gene.community.method="label.propagation")
  
- ## change the localfdr cutoff or adjust the modularity size
- nlnet(input,gene.fdr.cutoff=0.10,min.module.size=10)
+ ## change the fdr quantile to adjust the modularity size
+ nlnet(input,fdr.quantile=0.007,min.module.size=10)
  
  ## get the result and see it values
  comm<-nlnet(input)
