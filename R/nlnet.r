@@ -171,7 +171,22 @@ nlnet<-function(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007
     }else if(gene.community.method=="label.propagation"){
         commu<-label.propagation.community(gene.graph)
     }else if(gene.community.method=="leading.eigenvector"){
-        commu<-leading.eigenvector.community(gene.graph,options=list(n=1000))
+      errormsg = "yes"
+      graph.tmp<-gene.graph
+      commu<-tryCatch({
+        commu<-leading.eigenvector.community(graph.tmp)
+        return(commu)
+      },error = function(e) {
+        cat('---max interations reached, so restrict steps to 100')
+        errormsg2 = tryCatch({
+          commu<-leading.eigenvector.community(graph.tmp,steps=100)
+          return(commu)
+        },error = function(e){
+          cat('---max interations reached, so restrict steps to 10')
+          commu<-leading.eigenvector.community(graph.tmp,steps=10)
+          return(commu)
+        })
+      })
     }else{
       print("can not find the method, use multilevel as the default one")
       commu<-multilevel.community(gene.graph, weights=NA)
@@ -213,7 +228,7 @@ nlnet<-function(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007
     }else if(plot.method=="graph"){
       plot.igraph(gene.graph)
     }else if(plot.method=="membership"){ 
-        plot(mem)
+        plot(mem) 
     }
     
     commu$membership<-mem
