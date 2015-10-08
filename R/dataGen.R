@@ -1,4 +1,4 @@
-############# the function to generate dataset
+############# the function to generate simulated dataset
 # n.gene: the number of rows of the matrix 
 # n.samples: the number of columns of the matrix
 # n.grps: the number of hidden clusters

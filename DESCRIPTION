@@ -1,10 +1,13 @@
-Package: nlnet3
+Package: nlnet
 Type: Package
-Title: find the non-linear association between genes
+Title: Nonlinear network reconstruction and clustering based using DCOL
+        (Distance based on Conditional Ordered List)
 Version: 1.0
 Date: 2015-08-28
-Author: Haodong Liu, Tianwei Yu, Kai Wang
-Maintainer: Haodong Liu <liute62@sina.cn>
-Description: It includes three choices: K-means method, non-linear network reconstruction and non-linear hierarchical clustering.
+Author: Haodong Liu, Tianwei Yu
+Maintainer: Haodong Liu <liuhaodong0828@gmail.com>
+Description: It includes three methods: K-profiles clustering, non-linear network reconstruction, and non-linear hierarchical clustering.
 License: GPL (>= 2)
-Imports:TSP, fdrtool, igraph, coin
+Imports: TSP, igraph, fdrtool, coin
+NeedsCompilation: no
+Packaged: 2015-10-07 20:38:07 UTC; tianwei

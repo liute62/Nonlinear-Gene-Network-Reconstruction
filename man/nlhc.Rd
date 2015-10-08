@@ -4,7 +4,7 @@
   Non-Linear Hierarchical Clustering
 }
 \description{
-  The non-linear hierarchical clustering based on general dependency hiararchical cLustering
+  The non-linear hierarchical clustering based on DCOL
 }
 \usage{
 nlhc(array, hamil.method = "nn", concorde.path = NA, use.normal.approx = FALSE, normalization = "standardize", combine.linear = TRUE, use.traditional.hclust = FALSE, method.traditional.hclust = "average")
@@ -17,10 +17,10 @@ the data matrix with no missing values
 the method to find the hamiltonian path. 
 }
   \item{concorde.path}{
-using the Concorde TSP Solver
+If using the Concorde TSP Solver, the local directory of the solver
 }
   \item{use.normal.approx}{
-whether to use the normal approximation to for the null hypothesis.
+whether to use the normal approximation for the null hypothesis.
 }
   \item{normalization}{
 the normalization method for the array.
@@ -36,7 +36,7 @@ the method to pass on to hclust() if traditional method is chosen.
 }
 }
 \details{
-Hamil.method: It is passed onto the function tsp of library TSP to use linkern method, the user needs to install concord as instructed in TSP
+Hamil.method: It is passed onto the function tsp of library TSP. To use linkern method, the user needs to install concord as instructed in TSP.
 
 use.normal.approx: If TRUE, normal approximation is used for every feature, AND all covariances are assumed to be zero. If FALSE, generates permutation based null distribution - mean vector and a variance-covariance matrix.
 

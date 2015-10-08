@@ -1,7 +1,7 @@
 \name{data.gen}
 \alias{data.gen}
 \title{
-  Data Generation machine
+  Simulated Data Generation 
 }
 
 \description{
@@ -28,14 +28,16 @@ data.gen(n.genes=100, n.samples=10, n.grps=10, aver.grp.size=10, n.fun.types=3, 
   \item{n.depend}{data generation dependence structure. can be 0, 1, 2.
 } 
 }
-
+\details{
+	The data generation scheme is described in detail in IEEE ACM Trans. Comput. Biol. Bioinform. 10(4):1080-85.
+}
 \value{
  return the data including gene and clustering.
  \item{data}{the gene matrix}
  \item{grps}{the predicted clustering}
 }
 \author{
-Kai Wang <kai.wang.magic@gmail.com>
+Tianwei Yu<tyu8@emory.edu>
 }
 
 \examples{

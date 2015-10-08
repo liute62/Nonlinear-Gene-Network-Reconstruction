@@ -1,23 +1,23 @@
 \name{nlnet}
 \alias{nlnet}
 \title{
-  Non-Linear Network reconstruction
+  Non-Linear Network reconstruction from expression matrix
 }
 \description{
   Non-Linear Network reconstruction method
 }
 \usage{
-nlnet(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007, gene.fdr.plot=FALSE, min.module.size=0, gene.community.method="multilevel", use.normal.approx=FALSE, normalization="standardize", plot.method="communitygraph")
+nlnet(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2, conn.proportion=0.007, gene.fdr.plot=FALSE, min.module.size=0, gene.community.method="multilevel", use.normal.approx=FALSE, normalization="standardize", plot.method="communitygraph")
 }
 \arguments{
   \item{input}{the data matrix with no missing values.
 }
   \item{min.fdr.cutoff}{
-  the minimun value of the local false discovery cutoff in establishing links between genes.
+  the minimun allowable value of the local false discovery cutoff in establishing links between genes. 
 } \item{max.fdr.cutoff}{
-   the maximun value of the local false discovery cutoff in establishing links between genes.
-} \item{fdr.quantile}{
-   determine how much connections between genes.
+   the maximun allowable value of the local false discovery cutoff in establishing links between genes.
+} \item{conn.proportion}{
+   the target proportion of connections between all pairs of genes, if allowed by the fdr cutoff limits. 
 }
  \item{gene.fdr.plot}{
   whether plot a figure with estimated densities, distribution functions, and (local) false discovery rates.
@@ -32,7 +32,7 @@ nlnet(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007, gene.fdr
   \item{normalization}{the normalization method for the array. 
 }
   \item{plot.method}{
-  the method for graph and community ploting
+  the method for graph and community ploting.
 }
 }
 \details{
@@ -53,15 +53,14 @@ plot.method: It provides three kinds of ploting method:
   "membership" means ploting membership of the community 
 }
 \value{
-  it returns a community membership of the graph.
- \item{membership }{Numeric vector, one value for each vertex, the membership vector of the community structure.}
- \item{memberships}{The memberships of the community structure}
- \item{modularity}{Numeric scalar or vector, the modularity value of the community structure. It can also be NULL, if the modularity of the (best) split is not available.}
- \item{vcount}{The number of the item in graph}
+  it returns a graph and the community membership of the graph.
  \item{algorithm}{The algorithm name for community detection}
+ \item{graph}{A synopsis for graph class.}
+ \item{edges}{It is a sub-class of class graph. Numeric vector defining the edges, the first edge points from the first element to the second, the second edge from the third to the fourth, etc.}
+ \item{community}{Numeric vector, one value for each vertex, the membership vector of the community structure.}
 }
 \author{
-  Haodong Liu <liute62@sina.cn>
+  Haodong Liu <liuhaodong0828@gmail.com>
 }
 
 
@@ -83,8 +82,8 @@ plot.method: It provides three kinds of ploting method:
  ## use different community detection method
  nlnet(input,gene.community.method="label.propagation")
  
- ## change the fdr quantile to adjust the modularity size
- nlnet(input,fdr.quantile=0.007,min.module.size=10)
+ ## change the fdr pro to adjust the modularity size
+ nlnet(input,conn.proportion=0.005,min.module.size=10)
  
  ## get the result and see it values
  comm<-nlnet(input)

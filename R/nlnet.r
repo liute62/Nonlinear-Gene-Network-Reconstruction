@@ -2,7 +2,7 @@
 # input: the data matrix with no missing values
 # min.fdr.cutoff: the minimun value of the local false discovery cutoff in establishing links between genes
 # max.fdr.cutoff: the maximun value of the local false discovery cutoff in establishing links between genes
-# fdr.quantile: determine how much connections between genes.
+# conn.proportion: determine how much connections between genes.
 # gene.fdr.plot: whether plot a figure with estimated densities, distribution functions, and (local) false discovery rates
 # min.module.size: the min number of genes together as a module.
 # gene.community.method: it provides three kinds of community detection method:
@@ -15,7 +15,7 @@
 # return the community and its membership
 ################################################################################
 
-nlnet<-function(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007,gene.fdr.plot=FALSE,min.module.size=0,gene.community.method="multilevel",use.normal.approx=FALSE,normalization="standardize",plot.method="communitygraph")
+nlnet<-function(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,conn.proportion=0.007,gene.fdr.plot=FALSE,min.module.size=0,gene.community.method="multilevel",use.normal.approx=FALSE,normalization="standardize",plot.method="communitygraph")
 {
     
     normrow<-function(array)
@@ -144,7 +144,7 @@ nlnet<-function(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007
       gene.fdr.mat[i,]<-t.row.lfdr
     }
     #now dynamic adjust the fdr cutoff
-    last.fdr.cutoff<-quantile(as.vector(gene.fdr.mat),fdr.quantile)
+    last.fdr.cutoff<-quantile(as.vector(gene.fdr.mat),conn.proportion)
     cat('------fdr cutoff aimed ',last.fdr.cutoff,'-------\n')
     if(last.fdr.cutoff > max.fdr.cutoff){
         gene.fdr.cutoff<- max.fdr.cutoff
@@ -220,18 +220,19 @@ nlnet<-function(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,fdr.quantile=0.007
         }
       }
     }
-    
     if(plot.method=="none"){
         
     }else if(plot.method=="communitygraph"){
-      plot.communities(commu,gene.graph)
+      plot(commu,gene.graph)
     }else if(plot.method=="graph"){
       plot.igraph(gene.graph)
     }else if(plot.method=="membership"){ 
         plot(mem) 
     }
-    
-    commu$membership<-mem
-    return (commu)
+    graph.community<-new("list")
+    graph.community$algorithm<-gene.community.method
+    graph.community$graph<-gene.graph
+    graph.community$community<-mem
+    return (graph.community)
 }
 
