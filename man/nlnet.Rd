@@ -55,8 +55,7 @@ plot.method: It provides three kinds of ploting method:
 \value{
   it returns a graph and the community membership of the graph.
  \item{algorithm}{The algorithm name for community detection}
- \item{graph}{A synopsis for graph class.}
- \item{edges}{It is a sub-class of class graph. Numeric vector defining the edges, the first edge points from the first element to the second, the second edge from the third to the fourth, etc.}
+ \item{graph}{A igraph object including edges : Numeric vector defining the edges, the first edge points from the first element to the second, the second edge from the third to the fourth, etc.}
  \item{community}{Numeric vector, one value for each vertex, the membership vector of the community structure.}
 }
 \author{
@@ -86,7 +85,7 @@ plot.method: It provides three kinds of ploting method:
  nlnet(input,conn.proportion=0.005,min.module.size=10)
  
  ## get the result and see it values
- comm<-nlnet(input)
- mem<-comm$membership ##membership of community
- modul<-comm$modularity ##modularity of community
+ result<-nlnet(input)
+ graph<-result$graph ##a igraph object.
+ comm<-result$community ##community of the graph
 }
