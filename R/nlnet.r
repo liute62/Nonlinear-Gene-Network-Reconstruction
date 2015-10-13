@@ -139,7 +139,7 @@ nlnet<-function(input, min.fdr.cutoff=0.05,max.fdr.cutoff=0.2,conn.proportion=0.
     gene.fdr.mat<-matrix(0,nrow=n,ncol=n)
     for(i in 1:n) {
       sim.vec<-d.mat[i,]
-      suppressWarnings(t.locfdr<-fdrtool(sim.vec, statistic="normal", plot=FALSE,color.figure=TRUE,verbose=FALSE,cutoff.method="pct0",pct0=0.75))
+      suppressWarnings(t.locfdr<-fdrtool(sim.vec, statistic="normal", plot=gene.fdr.plot,color.figure=TRUE,verbose=FALSE,cutoff.method="pct0",pct0=0.75))
       t.row.lfdr<-as.vector(t.locfdr$lfdr)
       gene.fdr.mat[i,]<-t.row.lfdr
     }

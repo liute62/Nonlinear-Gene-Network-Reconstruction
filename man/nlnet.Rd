@@ -55,7 +55,7 @@ plot.method: It provides three kinds of ploting method:
 \value{
   it returns a graph and the community membership of the graph.
  \item{algorithm}{The algorithm name for community detection}
- \item{graph}{A igraph object including edges : Numeric vector defining the edges, the first edge points from the first element to the second, the second edge from the third to the fourth, etc.}
+ \item{graph}{An igraph object including edges : Numeric vector defining the edges, the first edge points from the first element to the second, the second edge from the third to the fourth, etc.}
  \item{community}{Numeric vector, one value for each vertex, the membership vector of the community structure.}
 }
 \author{
@@ -81,7 +81,8 @@ plot.method: It provides three kinds of ploting method:
  ## use different community detection method
  nlnet(input,gene.community.method="label.propagation")
  
- ## change the fdr pro to adjust the modularity size
+ ## change the fdr pro to control connections of genes
+ ## adjust the modularity size
  nlnet(input,conn.proportion=0.005,min.module.size=10)
  
  ## get the result and see it values
